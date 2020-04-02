@@ -13,6 +13,7 @@ class Client
     private const B2_API_BASE_URL = 'https://api.backblazeb2.com';
     private const B2_API_V1 = '/b2api/v1/';
     protected $accountId;
+    protected $keyId;
     protected $applicationKey;
     protected $authToken;
     protected $apiUrl;
@@ -30,9 +31,10 @@ class Client
      *
      * @throws \Exception
      */
-    public function __construct($accountId, $applicationKey, array $options = [])
+    public function __construct($accountId, $keyId, $applicationKey, array $options = [])
     {
         $this->accountId = $accountId;
+        $this->keyId = $keyId;
         $this->applicationKey = $applicationKey;
 
         $this->authTimeoutSeconds = 12 * 60 * 60; // 12 hour default
@@ -407,7 +409,7 @@ class Client
         }
 
         $response = $this->client->request('GET', self::B2_API_BASE_URL.self::B2_API_V1.'/b2_authorize_account', [
-            'auth' => [$this->accountId, $this->applicationKey],
+            'auth' => [$this->keyId, $this->applicationKey],
         ]);
 
         $this->authToken = $response['authorizationToken'];
